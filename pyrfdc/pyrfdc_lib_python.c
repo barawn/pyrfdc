@@ -39,10 +39,13 @@ typedef struct {
 static PyObject *
 _pyrfdc_Device_configure( _pyrfdc_Device *self, PyObject *arg) {
   if (PyDict_Check(arg)) {
-    XRFdc_Config *cfg;
+    XRFdc_Config cfg;
     u32 res;
     Py_xrfdc_config_fill(arg, &cfg);
-    res = XRFdc_CfgInitialize(self->dev, &cfg);
+    res = XRFdc_CfgInitialize(&self->dev, &cfg);
+    // uh i dunno
+    if (res != 0)
+      printf("got an error %d\n", res);
   } else {
     PyErr_SetString(PyExc_TypeError, "a dictionary is required");
     return NULL;
