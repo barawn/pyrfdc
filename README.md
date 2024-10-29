@@ -59,10 +59,15 @@ The other metal functions we need to supply are
 * - metal_device_close
 * - metal_register_generic_device
 
-## extracting parameters from the hwh file
+# RFDC parameters
 
-```
-xmllint --xpath "(//MODULE[@MODTYPE='usp_rf_data_converter']/PARAMETERS)" firmware.hwh
-```
+You want to pass the RFdc parameters to PyRFDC by passing the
+XCI file built in the firmware. We use the XCI rather than the HWH
+because it won't be in the HWH if it's not in the block diagram.
+But the XCI is just a JSON version of the stuff in the HWH
+anyway.
 
-this will produce valid XML which can be parsed
+# Building
+
+You need to build the stuff in libunivrfdc first on the target
+you want to run it on.
