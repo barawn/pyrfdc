@@ -13,3 +13,5 @@ clean:
 
 $(TARGET): $(OBJECTS)
 	$(CC) -shared $(CFLAGS) -o $(TARGET) $(OBJECTS)
+	strip --strip-unneeded $(TARGET)
+
