@@ -12,9 +12,18 @@ enable that by creating an incredibly dummy metal library.
 
 The libunivrfdc dummy metal library abuses the metal_io_region
 pointer to store a read and write function. The read function
-just takes an address and returns a value, the write function
-takes an address, value, and __mask__ and returns nothing.
+just takes a void pointer and n address and returns a value,
+the write function takes a void pointer, address, value, and __mask__
+and returns nothing.
 
 I don't know if the mask is important for XRFdc, but XRFdc
 occasionally does a Write16 instead of Write32, so we need
 to avoid certain cases.
+
+The magic is in metal_io_set_device: you pass it a void pointer,
+and a read and write function. The read/write functions will
+receive the void pointer as the first argument.
+
+The void pointer is used to store whatever you need, you don't
+have to use it if you don't want to.
+
