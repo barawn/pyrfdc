@@ -61,11 +61,10 @@ The other metal functions we need to supply are
 
 # RFDC parameters
 
-You want to pass the RFdc parameters to PyRFDC by passing the
-XCI file built in the firmware. We use the XCI rather than the HWH
-because it won't be in the HWH if it's not in the block diagram.
-But the XCI is just a JSON version of the stuff in the HWH
-anyway.
+You create the parameter file for the RFDC from the IP core's XCI file
+using the ``make_paramfile.py`` script in ``utils/``. All that script
+does is extract the model_parameters entry and pickle it: it's still
+overly verbose, but smaller than the XCI is.
 
 # Building
 
