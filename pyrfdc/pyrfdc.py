@@ -112,8 +112,11 @@ class PyRFDC:
     VALID_BLOCK_IDS = [ 0, 1, 2, 3 ]
     
     # dev here is expected to have a dev.read/dev.write function
-    # dev.write REALLY SHOULD take a mask option!! but we sleaze
-    # it here!
+    # write nominally takes 3 parameters - the third is the short
+    # mask - but we've discovered that this is utterly pointless
+    # so completely ignore it anyway. there is literally no capability
+    # to do 16-bit anything in the driver, all the 16-bit stuff
+    # just adds bugs to their code.
     def __init__(self, dev, paramFile, univrfdcPath="libunivrfdc.so"):
         self.dev = dev
         self.read = self.dev.read
