@@ -2,6 +2,25 @@
 #include <stdarg.h>
 #include "sys.h"
 
+// UPDATE 11/7/24 PSA:
+// Inspection of the RFdc HDL shows that there is literally
+// zero point to the 16-bit read/writes, because there
+// is no capability whatsoever in the IP to do anything
+// with it: Bus2IP_BE (the byte-enables, which would
+// be used for 16-bit writes) are connected to absolutely
+// nothing.
+
+// I don't even actually know if the 16-bit reads only
+// return 16 bits - the function's defined to read
+// a u64.
+
+// I'm actually pretty sure that there are just wacko
+// amounts of bugs in Xilinx's code all over the place.
+// For instance, I'm pretty sure that xrfdc_intr's
+// XRFdc_IntrEnable just absolutely blows away the
+// AXI timeout interrupt because it uses a 16-bit
+// write and metal_io_write16 casts it to a short.
+
 struct metal_device dummy_device;
 struct metal_io_region this_region = { NULL, NULL, NULL };
 
@@ -40,11 +59,9 @@ void metal_io_write16( struct metal_io_region *io,
 		       unsigned long offset,
 		       uint16_t value ) {
   if (io->write_function != NULL) {
-    uint32_t mask;
-    // if we're 32-bit aligned, mask the upper word
-    // else mask the lower word
-    mask = ((offset & 0x2)==0) ? 0x2 : 0x1;
-    io->write_function(io->dev, offset, value, mask);
+    // literally just ignore the fact that it's a write16.
+    // stupid xilinx.
+    io->write_function(io->dev, offset, value, 0);
   }
 }
 void metal_io_write32( struct metal_io_region *io,
@@ -54,15 +71,11 @@ void metal_io_write32( struct metal_io_region *io,
     io->write_function(io->dev, offset, value, 0);
   }
 }
-uint16_t metal_io_read16( struct metal_io_region *io,
+// again just ignore the fact that it's supposedly 16 bit
+uint32_t metal_io_read16( struct metal_io_region *io,
 			  unsigned long offset ) {
   if (io->read_function != NULL) {
-    uint32_t tmp;
-    uint16_t res;
-    tmp = io->read_function(io->dev, offset);
-    if (offset & 0x2) res = (tmp & 0xFFFF0000)>>16;
-    else res = (tmp & 0xFFFF);
-    return res;
+    return io->read_function(io->dev, offset);
   }
   return 0xFFFF;
 }
