@@ -72,10 +72,10 @@ void metal_io_write32( struct metal_io_region *io,
   }
 }
 // again just ignore the fact that it's supposedly 16 bit
-uint32_t metal_io_read16( struct metal_io_region *io,
+uint16_t metal_io_read16( struct metal_io_region *io,
 			  unsigned long offset ) {
   if (io->read_function != NULL) {
-    return io->read_function(io->dev, offset);
+    return io->read_function(io->dev, offset) & 0xFFFF;
   }
   return 0xFFFF;
 }
