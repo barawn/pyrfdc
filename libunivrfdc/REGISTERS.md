@@ -43,6 +43,7 @@ RFdc.
 Global register map (C/S = control/status):
 
 | Name/Usage | Chip Select | Address Space |
+| ---------- | ----------- | ------------- |
 | Global C/S | 0 | 0x00000 - 0x00107 |
 | DAC0 C/S | 2 | 0x04000-0x04323 |
 | DAC0 DRP | 3 | 0x06000-0x07FFF |
