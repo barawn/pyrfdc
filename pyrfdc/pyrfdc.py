@@ -350,9 +350,9 @@ class PyRFDC:
                              
     @classmethod
     def _checkTileAndBlock(cls, tile, block):
-        if int(tile_id) not in cls.VALID_TILE_IDS:
+        if int(tile) not in cls.VALID_TILE_IDS:
             raise ValueError("tile_id must be one of %s" % self.VALID_TILE_IDS)
-        if int(block_id) not in cls.VALID_BLOCK_IDS:
+        if int(block) not in cls.VALID_BLOCK_IDS:
             raise ValueError("block_id must be one of %s" % self.VALID_BLOCK_IDS)
         return (int(tile), int(block))
         
