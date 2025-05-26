@@ -12,7 +12,7 @@ enable that by creating an incredibly dummy metal library.
 
 The libunivrfdc dummy metal library abuses the metal_io_region
 pointer to store a read and write function. The read function
-just takes a void pointer and n address and returns a value,
+just takes a void pointer and an address and returns a value,
 the write function takes a void pointer, address, value, and __mask__
 and returns nothing.
 
@@ -27,3 +27,23 @@ receive the void pointer as the first argument.
 The void pointer is used to store whatever you need, you don't
 have to use it if you don't want to.
 
+# tl;dr
+
+You need to call ``metal_io_set_device`` in this library
+and pass it a read and write function. Signatures are:
+```
+typedef uint32_t (*read_function_t)(void *dev, uint32_t addr);
+typedef void (*write_function_t)(void *dev, uint32_t addr, uint32_t value, uint32_t mask);
+```
+
+and then the ``metal_io_set_device`` is:
+```
+void metal_io_set_device( void * dev,
+			  read_function_t read_function,
+			  write_function_t write_function);
+```
+After that you can get the ``metal_io_region`` by just calling
+```
+io = metal_io_region(NULL, 0)
+```
+and then just initialize a blank XRFdc structure and set its ``io`` pointer to that.
