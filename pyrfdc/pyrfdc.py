@@ -127,8 +127,7 @@ class PyRFDC:
         self.mtsAdcConfig = XRFdc_MultiConverter_Sync_Config()
         self.paramFile = paramFile
         
-        ctypes.cdll.LoadLibrary(univrfdcPath)
-        self.lib = ctypes.CDLL("libunivrfdc.so")
+        self.lib = ctypes.cdll.LoadLibrary(univrfdcPath)
 
         # set up the return crap here
         self.lib.metal_io_region.restype = ctypes.POINTER(metal_io_region)
