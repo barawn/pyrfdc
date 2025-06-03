@@ -228,8 +228,8 @@ class PyRFDC:
             raise ValueError("type must be one of %s" % [e.value for e in self.ConverterType])
 
         # create types
-        vtype = ctypes.uint*4
-        ptype = ctypes.POINTER(ptype)
+        vtype = ctypes.c_int*4
+        ptype = ctypes.POINTER(vtype)
         if pllCodes:
             if len(pllCodes) != 4:
                 raise TypeError("pllCodes must have 4 elements")
