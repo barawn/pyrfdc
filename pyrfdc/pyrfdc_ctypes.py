@@ -124,7 +124,7 @@ class XRFdc_MultiConverter_Sync_Config(Structure):
         ('Tiles', u32),
         ('Target_Latency', c_int),
         ('Offset', c_int*int(4)),
-        ('Latency', c_int*int(4))
+        ('Latency', c_int*int(4)),
         ('Marker_Delay', c_int),
         ('SysRef_Enable', c_int),
         ('DTC_Set_PLL', XRFdc_MTS_DTC_Settings),
