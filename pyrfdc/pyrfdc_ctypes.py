@@ -121,14 +121,14 @@ class XRFdc_MultiConverter_Sync_Config(Structure):
     _pack_ = 1
     _fields_ = [
         ('RefTile', u32),
-        ('IsPLL', u32),
-        ('Target', c_int * int(4)),
-        ('Scan_Mode', c_int),
-        ('DTC_Code', c_int * int(4)),
-        ('Num_Windows', c_int * int(4)),
-        ('Max_Gap', c_int * int(4)),
-        ('Min_Gap', c_int * int(4)),
-        ('Max_Overlap', c_int * int(4)),
+        ('Tiles', u32),
+        ('Target_Latency', c_int),
+        ('Offset', c_int*int(4)),
+        ('Latency', c_int*int(4))
+        ('Marker_Delay', c_int),
+        ('SysRef_Enable', c_int),
+        ('DTC_Set_PLL', XRFdc_MTS_DTC_Settings),
+        ('DTC_Set_T1', XRFdc_MTS_DTC_Settings)
     ]
 
 class XRFdc_MTS_Marker(Structure):
