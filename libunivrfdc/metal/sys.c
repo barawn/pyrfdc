@@ -23,6 +23,7 @@
 
 struct metal_device dummy_device;
 struct metal_io_region this_region = { NULL, NULL, NULL };
+FILE *this_stream = NULL;
 
 // these LITERALLY NEVER GET CALLED. EVER.
 int metal_device_open(const char *bus_name,
@@ -38,12 +39,12 @@ void metal_log( int verbosity,
 		...) {
   va_list args;
   va_start( args, format );
-  printf("metal_log<%d>:", verbosity);
-  vprintf(format, args);
+  fprintf(this_stream, "metal_log<%d>:", verbosity);
+  vfprintf(this_stream, format, args);
 }
 
 void metal_device_close(struct metal_device *device) {
-  
+  if (this_stream != stdout) fclose(this_stream);
 }
 
 struct metal_io_region *metal_io_region(struct metal_device *dev,
@@ -93,6 +94,18 @@ void metal_io_set_device( void * dev,
   this_region.dev = dev;
   this_region.read_function = read_function;
   this_region.write_function = write_function;
+  this_stream = stdout;
+}
+
+// my hacky function to allow printing logs to a filedes
+// so stupid but whatever
+void metal_io_set_log( int fd ) {
+  if (this_stream != stdout) fclose(this_stream);
+  if (fd < 0) {
+    this_stream = stdout;
+  } else {
+    this_stream = fdopen(dup(fd), "a+");
+  }
 }
 
 int metal_linux_get_device_property(struct metal_device *dev,

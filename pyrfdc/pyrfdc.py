@@ -155,6 +155,13 @@ class PyRFDC:
         else:
             raise IOError("metal_io_region")
 
+    def log_to(self, fn=None):
+        if not fn:
+            if self.log_file:
+                os.close(self.log_file)
+                self.log_file = None
+                
+        
     # this is SIMILAR TO but NOT THE SAME
     # as PYNQ's crap since they get it from the HWH and we get it from
     # the XCI, which is JSON
@@ -180,11 +187,12 @@ class PyRFDC:
         modelParams = None
         try:
             if not os.path.isfile(self.paramFile):
-                raise ValueError("%s is not a file" % self.xciFile)
+                raise ValueError("%s is not a file" % self.paramFile)
             with open(self.paramFile, "rb") as f:
                 modelParams = pickle.load(f)
         except Exception as e:
-            raise ValueError("%s was not parseable") from e
+            print(f'Exception loading: {self.paramFile} : {repr(e)}')
+            raise ValueError("exception exception")
         # modelParams is now ok 
         _set_configs(self.rfdcConfig,
                      modelParams,

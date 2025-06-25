@@ -78,4 +78,6 @@ void metal_io_set_device( void *dev,
 			  read_function_t read_function,
 			  write_function_t write_function);
 
+void metal_io_set_log( int fd );
+
 #endif
