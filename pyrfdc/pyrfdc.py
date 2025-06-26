@@ -308,7 +308,7 @@ class PyRFDC:
         (tile, block) = self._checkTileAndBlock(tile_id, block_id)
 
         settings = XRFdc_CoarseDelay_Settings()
-        res = self.lib.XRFdc_GetCoarseDelaySettings(self.rfdc,
+        res = self.lib.XRFdc_GetCoarseDelaySettings(ctypes.pointer(self.rfdc),
                                                     typeInt,
                                                     tile,
                                                     block,
@@ -323,7 +323,7 @@ class PyRFDC:
         (tile, block) = self._checkTileAndBlock(tile_id, block_id)
         settingsPtr = self._checkSettingsTypePtr(settings, XRFdc_CoarseDelay_Settings)
 
-        return self.lib.XRFdc_SetCoarseDelaySettings(self.rfdc,
+        return self.lib.XRFdc_SetCoarseDelaySettings(ctypes.pointer(self.rfdc),
                                             typeInt,
                                             tile,
                                             block,
@@ -333,7 +333,7 @@ class PyRFDC:
         (tile, block) = self._checkTileAndBlock(tile_id, block_id)
         settingsPtr = self._checkSettingsTypePtr(settings, XRFdc_DSA_Settings)
 
-        return self.lib.XRFdc_SetDSA(self.rfdc,
+        return self.lib.XRFdc_SetDSA(ctypes.pointer(self.rfdc),
                                      tile,
                                      block,
                                      settingsPtr)
@@ -341,13 +341,26 @@ class PyRFDC:
     def GetDSA(self, tile_id, block_id):
         (tile, block) = self._checkTileAndBlock(tile_id, block_id)
         settings = XRFdc_DSA_Settings()
-        res = self.lib.XRFdc_GetDSA(self.rfdc,
+        res = self.lib.XRFdc_GetDSA(ctypes.pointer(self.rfdc),
                                     tile,
                                     block,
                                     ctypes.pointer(settings))
         if res:
             raise ValueError("XRFdc_GetDSA returned %d" % res)
         return settings
+
+    def GetCalCoefficients(self, tile_id, block_id, cal_block):
+        (tile, block) = self._checkTileAndBlock(tile_id, block_id)
+        coeffs = XRFdc_Calibration_Coefficients()
+        res = self.lib.XRFdc_GetCalCoefficients(ctypes.pointer(self.rfdc),
+                                                tile_id,
+                                                block_id,
+                                                cal_block,
+                                                ctypes.pointer(coeffs))
+        if res:
+            raise ValueError("XRFdc_GetCalCoefficients returned %d" % res)
+        return coeffs
+    
 
     @classmethod
     def _checkSettingsTypePtr(cls, settings, settingsType):
