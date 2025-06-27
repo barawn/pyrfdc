@@ -388,9 +388,7 @@ class PyRFDC:
         return self.lib.XRFdc_SetCalFreeze(ctypes.pointer(self.rfdc),
                                            tile,
                                            block,
-                                           frzPtr)
-
-    
+                                           frzPtr)    
     
     @classmethod
     def _checkSettingsTypePtr(cls, settings, settingsType):
