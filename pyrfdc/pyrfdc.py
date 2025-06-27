@@ -360,8 +360,38 @@ class PyRFDC:
         if res:
             raise ValueError("XRFdc_GetCalCoefficients returned %d" % res)
         return coeffs
-    
 
+    def SetCalCoefficients(self, tile_id, block_id, cal_block, cal):
+        (tile, block) = self._checkTileAndBlock(tile_id, block_id)
+        calPtr = self._checkSettingsTypePtr(cal, XRFdc_Calibration_Coefficients)
+        return self.lib.XRFdc_SetCalCoefficients(ctypes.pointer(self.rfdc),
+                                                 tile,
+                                                 block,
+                                                 calPtr)
+    
+    def GetCalFreeze(self, tile_id, block_id):
+        (tile, block) = self._checkTileAndBlock(tile_id, block_id)
+
+        freeze = XRFdc_Cal_Freeze_Settings();
+
+        res = XRFdc_GetCalFreeze(ctypes.pointer(self.rfdc),
+                                 tile,
+                                 block,
+                                 ctypes.pointer(freeze))
+        if res:
+            raise ValueError("XRFdc_GetCalFreeze returned %d" % res)
+        return freeze
+
+    def SetCalFreeze(self, tile_id, block_id, frz):
+        (tile, block) = self._checkTileAndBlock(tile_id, block_id)
+        frzPtr = self._checkSettingsTypePtr(frz, XRFdc_Cal_Freeze_Settings)
+        return self.lib.XRFdc_SetCalFreeze(ctypes.pointer(self.rfdc),
+                                           tile,
+                                           block,
+                                           frzPtr)
+
+    
+    
     @classmethod
     def _checkSettingsTypePtr(cls, settings, settingsType):
         if type(settings) != settingsType:
